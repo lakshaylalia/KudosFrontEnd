@@ -1,7 +1,7 @@
 "use client";
 import { useState } from 'react'
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/Sidebar";
-import { IconHome, IconBuildingStore, IconTicket, IconDeviceDesktopAnalytics, IconArrowLeft, IconSettings } from "@tabler/icons-react";
+import { IconHome, IconBuildingStore, IconTicket, IconDeviceDesktopAnalytics,IconSettings } from "@tabler/icons-react";
 import { MdOutlineLogin } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi";
 function SideBarComp() {

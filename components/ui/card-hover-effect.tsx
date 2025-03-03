@@ -17,7 +17,7 @@ export const HoverEffect = ({
   }[];
   className?: string;
 }) => {
-  let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
     <div
@@ -51,13 +51,13 @@ export const HoverEffect = ({
               />
             )}
           </AnimatePresence>
-          <Card>
+          {/* <Card>
             <CardTitle>{item.title}</CardTitle>
             <CardDescription>{item.description}</CardDescription>
-            <CardButton>{item.button}</CardButton>
+            <CardButton onClick={() => {console.log("Clicked")}}>{item.button}</CardButton>
             <CardStatus>{item.status}</CardStatus>
             <CardDate>{item.date}</CardDate>
-          </Card>
+          </Card> */}
         </Link>
       ))}
     </div>

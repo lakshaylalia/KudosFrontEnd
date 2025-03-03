@@ -295,7 +295,7 @@ function App() {
               <h2 className="text-3xl font-bold text-gray-900 mb-6">What is Kudos?</h2>
               <p className="text-lg text-gray-700 mb-8">
                 Kudos is a premier event discovery and management platform that connects people with exciting events happening in their community.
-                Whether you're looking for concerts, workshops, conferences, or social gatherings, Kudos helps you find and participate in events
+                Whether you&apos;re looking for concerts, workshops, conferences, or social gatherings, Kudos helps you find and participate in events
                 that match your interests.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
