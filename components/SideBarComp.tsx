@@ -2,7 +2,8 @@
 import { useState } from 'react'
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/Sidebar";
 import { IconHome, IconBuildingStore, IconTicket, IconDeviceDesktopAnalytics, IconArrowLeft, IconSettings } from "@tabler/icons-react";
-
+import { MdOutlineLogin } from "react-icons/md";
+import { BiLogOut } from "react-icons/bi";
 function SideBarComp() {
     const [login, setLogin] = useState(false);
 
@@ -28,7 +29,7 @@ function SideBarComp() {
                     />
                     <div onClick={toggleLogin}>
                         <SidebarLink
-                            link={{ label: login ? "Logout" : "Sign In", href: login ? "/login" : "/signup", icon: <IconArrowLeft /> }}
+                            link={{ label: login ? "Logout" : "Sign In", href: login ? "/login" : "/signup", icon: login ?<BiLogOut/> :<MdOutlineLogin /> }}
                         />
                     </div>
                     <SidebarLink
