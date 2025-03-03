@@ -1,0 +1,13 @@
+"use client";
+import SideBarComp from '@/components/SideBarComp';
+import React from 'react'
+
+function page() {
+  return (
+    <div className="w-full h-screen">
+      <SideBarComp />
+      </div>
+  )
+}
+
+export default page
