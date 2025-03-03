@@ -1,6 +1,7 @@
 "use client";
 import SideBarComp from '@/components/SideBarComp';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 export default function Page() {
   interface Product {
@@ -40,7 +41,14 @@ export default function Page() {
         ) : data.length > 0 ? (
           data.map((item) => (
             <div key={item.id} className="bg-gray-100 p-6 rounded-2xl shadow-lg border border-gray-300 hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between">
-              <img src={item.image} alt={item.title} className="w-full h-40 object-contain rounded-lg" />
+              <img
+                src={item.image}
+                alt={item.title}
+                width={500}
+                height={400}
+                className="w-full h-40 object-contain rounded-lg"
+              />
+
               <h2 className="text-lg font-semibold mt-3 text-gray-900">{item.title}</h2>
               <p className="text-sm text-gray-700 mt-2 line-clamp-3">{item.description}</p>
               <p className="text-xl font-bold text-blue-600 mt-3">${item.price.toFixed(2)}</p>

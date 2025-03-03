@@ -56,7 +56,7 @@ export const Sidebar = ({
   children,
   open,
   setOpen,
-  animate,
+  animate
 }: {
   children: React.ReactNode;
   open?: boolean;
@@ -64,7 +64,7 @@ export const Sidebar = ({
   animate?: boolean;
 }) => {
   return (
-    <SidebarProvider open={open} setOpen={setOpen} animate={false}>
+    <SidebarProvider open={open} setOpen={setOpen} animate={animate}>
       {children}
     </SidebarProvider>
   );
@@ -89,7 +89,7 @@ export const DesktopSidebar = ({
     <>
       <motion.div
         className={cn(
-          "h-full px-4 py-2 hidden  md:flex md:flex-col md:gap-8 bg-neutral-100 dark:bg-neutral-800 w-[300px] flex-shrink-0",
+          "h-full px-4 py-2 hidden  md:flex md:flex-col md:gap-8 bg-indigo-900 text-white shadow-xl border-r border-indigo-800 dark:bg-neutral-800 w-[300px] flex-shrink-0 ",
           className
         )}
         animate={{
@@ -115,7 +115,7 @@ export const MobileSidebar = ({
     <>
       <div
         className={cn(
-          "h-10 px-4 py-4 flex flex-row md:hidden  items-center justify-between bg-neutral-100 dark:bg-neutral-800 w-full"
+          "h-10 px-4 py-4 flex flex-row md:hidden items-center justify-between dark:bg-neutral-800 w-full absolute"
         )}
         {...props}
       >
@@ -136,7 +136,7 @@ export const MobileSidebar = ({
                 ease: "easeInOut",
               }}
               className={cn(
-                "fixed h-full w-full inset-0 bg-white dark:bg-neutral-900 p-10 z-[100] flex flex-col justify-between",
+                "fixed h-full w-full inset-0 bg-indigo-900 bacdrop-blur/md dark:bg-neutral-900 p-10 z-[100] flex flex-col justify-between",
                 className
               )}
             >
@@ -181,7 +181,7 @@ export const SidebarLink = ({
           display: animate ? (open ? "inline-block" : "none") : "inline-block",
           opacity: animate ? (open ? 1 : 0) : 1,
         }}
-        className="text-neutral-700 dark:text-neutral-200 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
+        className="text-white dark:text-neutral-200 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
       >
         {link.label}
       </motion.span>
