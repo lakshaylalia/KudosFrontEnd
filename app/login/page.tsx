@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { FcGoogle} from "react-icons/fc";
+import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { IoLogoApple } from "react-icons/io5";
 
@@ -11,21 +11,37 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
-
-    if (!email || !password) {
-      setFormError("Please fill in all fields");
-      return;
-    }
-
     setIsLoading(true);
-    setTimeout(() => {
+
+    try {
+      const response = await fetch("api", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Invalid credentials");
+      }
+
+      const data = await response.json();
+      localStorage.setItem("token", data.token); // Store JWT token
       alert("Logged in successfully!");
+      window.location.href = "/dashboard"; // Redirect to dashboard
+    } catch (error) {
+      if (error instanceof Error) {
+        setFormError(error.message);
+      } else {
+        setFormError("An unknown error occurred");
+      }
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
+
 
   const handleSocialLogin = (provider: string) => {
     alert(`Login with ${provider} clicked! (Not implemented)`);
@@ -50,34 +66,21 @@ const Login: React.FC = () => {
           </div>
         )}
 
-        {/* Social Login Buttons */}
         <div className="flex flex-col space-y-3">
-          <button
-            onClick={() => handleSocialLogin("Google")}
-            className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
+          <button onClick={() => handleSocialLogin("Google")} className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
             <FcGoogle className="h-5 w-5 mr-2" />
             Continue with Google
           </button>
-
-          <button
-            onClick={() => handleSocialLogin("Facebook")}
-            className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            <FaFacebook  className="h-5 w-5 mr-2" />
+          <button onClick={() => handleSocialLogin("Facebook")} className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+            <FaFacebook className="h-5 w-5 mr-2 text-blue-600" />
             Continue with Facebook
           </button>
-
-          <button
-            onClick={() => handleSocialLogin("Apple")}
-            className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            <IoLogoApple  className="h-5 w-5 mr-2" />
+          <button onClick={() => handleSocialLogin("Apple")} className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+            <IoLogoApple className="h-5 w-5 mr-2" />
             Continue with Apple
           </button>
         </div>
 
-        {/* Divider */}
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-300"></div>
@@ -87,14 +90,11 @@ const Login: React.FC = () => {
           </div>
         </div>
 
-        {/* Email & Password Login */}
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email-address" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email address</label>
             <input
-              id="email-address"
+              id="email"
               name="email"
               type="email"
               autoComplete="email"
@@ -106,14 +106,7 @@ const Login: React.FC = () => {
           </div>
 
           <div>
-            <div className="flex items-center justify-between">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <a href="#" className="text-xs font-medium text-blue-600 hover:text-blue-500">
-                Forgot password?
-              </a>
-            </div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
             <input
               id="password"
               name="password"
@@ -126,15 +119,25 @@ const Login: React.FC = () => {
             />
           </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-            >
-              {isLoading ? "Signing in..." : "Sign in"}
-            </button>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">Remember me</label>
+            </div>
+            <div className="text-sm">
+              <Link href="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500">
+                Forgot password?
+              </Link>
+            </div>
           </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+          >
+            {isLoading ? "Signing in..." : "Sign in"}
+          </button>
         </form>
       </div>
     </div>

@@ -1,51 +1,36 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FcGoogle} from "react-icons/fc";
+import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import Link from "next/link";
+import axios from "axios";
 
 const Signup: React.FC = () => {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
-
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormError(null);
-
-    if (!name || !email || !password) {
-      setFormError("Please fill in all fields");
-      return;
-    }
-
-    if (password.length < 6) {
-      setFormError("Password must be at least 6 characters long");
-      return;
-    }
+    setIsLoading(true);
+    setError("");
 
     try {
-      setIsLoading(true);
-      // Simulating user signup logic
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 1000);
-    } catch (error) {
-      setFormError(error instanceof Error ? error.message : "Signup failed");
+      await axios.post("signupAPI", { name, email, password });
+      router.push("/login");
+    } catch {
+      setError("Signup failed");
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleSocialSignup = (provider: string) => {
-    console.log(`Signing up with ${provider}`);
-    setTimeout(() => {
-      router.push("/dashboard");
-    }, 1000);
+    alert(`Signing up with ${provider} (Not Implemented)`);
   };
 
   return (
@@ -61,9 +46,9 @@ const Signup: React.FC = () => {
           </p>
         </div>
 
-        {formError && (
+        {error && (
           <div className="bg-red-50 border border-red-200 rounded-md p-3">
-            <p className="text-sm text-red-600">{formError}</p>
+            <p className="text-sm text-red-600">{error}</p>
           </div>
         )}
 
@@ -97,7 +82,7 @@ const Signup: React.FC = () => {
         </div>
 
         {/* Signup Form */}
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-4" onSubmit={handleSignup}>
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
               Full name

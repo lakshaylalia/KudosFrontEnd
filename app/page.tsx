@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, MapPin, Users, Star, Award, ChevronRight } from 'lucide-react';
 import Footer from '@/components/Footer';
 import SideBarComp from '@/components/SideBarComp';
+import Link from 'next/link';
 
 // Types
 interface Event {
@@ -118,6 +119,8 @@ function App() {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+
+
   return (
     <div className='w-full h-screen flex'>
       <SideBarComp />
@@ -164,9 +167,9 @@ function App() {
             <div className="container mx-auto px-4">
               <div className="flex items-center justify-between mb-10">
                 <h2 className="text-3xl font-bold text-gray-900">Featured Events</h2>
-                <a href="#all-events" className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                <Link href="#all-events" className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
                   View all events <ChevronRight size={20} />
-                </a>
+                </Link>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {featuredEvents.map(event => (
