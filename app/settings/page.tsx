@@ -7,8 +7,8 @@ import Footer from '@/components/Footer';
 const Settings = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [emailNotifications, setEmailNotifications] = useState(true);
-  const [language, setLanguage] = useState('en');
-  const [privacy, setPrivacy] = useState('public');
+  // const [language, setLanguage] = useState('en');
+  // const [privacy, setPrivacy] = useState('public');
   const router = useRouter();
 
   return (

@@ -1,10 +1,10 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React, { useContext } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
+// import { cn } from "@/lib/utils";
 
 interface SignUpFormInputs {
   firstName: string;
