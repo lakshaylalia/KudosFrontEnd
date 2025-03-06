@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/Sidebar";
 import { IconHome, IconBuildingStore, IconTicket, IconDeviceDesktopAnalytics,IconSettings } from "@tabler/icons-react";
 import { MdOutlineLogin } from "react-icons/md";
+import { CiBoxList } from "react-icons/ci";
 import { BiLogOut } from "react-icons/bi";
 function SideBarComp() {
     const [login, setLogin] = useState(false);
@@ -27,13 +28,8 @@ function SideBarComp() {
                         link={{
                             label: "Dashboard", href: "/dashboard", icon: <IconDeviceDesktopAnalytics />}}
                     />
-                    <div onClick={toggleLogin}>
-                        <SidebarLink
-                            link={{ label: login ? "Logout" : "Sign In", href: login ? "/login" : "/signup", icon: login ?<BiLogOut/> :<MdOutlineLogin /> }}
-                        />
-                    </div>
                     <SidebarLink
-                        link={{ label: "About", href: "/about", icon: <IconSettings /> }}
+                        link={{ label: "About", href: "/about", icon: <CiBoxList className='text-3xl' /> }}
                     />
                     <SidebarLink
                         link={{ label: "Settings", href: "/settings", icon: <IconSettings /> }}

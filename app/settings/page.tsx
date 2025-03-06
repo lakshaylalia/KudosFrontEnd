@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-import { Bell, Home, Sun, Globe, Lock, UserCircle, Mail, Key } from 'lucide-react';
+import { Bell, Home, Sun, Globe, Lock, UserCircle, Mail } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Footer from '@/components/Footer';
 
@@ -21,9 +21,9 @@ const Settings = () => {
           </div>
           <button
             onClick={() => router.push('/')}
-            className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+            className="flex items-center text-sm md:text-xl px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
           >
-            <Home className="w-5 h-5 mr-2" /> Go Home
+            <Home className="h-4 w-4 md:w-5 md:h-5 mr-2" />Home
           </button>
         </div>
 

@@ -132,12 +132,12 @@ function App() {
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">Kudos</h1>
               <p className="text-xl md:text-2xl mb-8 opacity-90">
-                  Don't just scroll—show up!
+                  Don&apos;t just scroll—show up!
               </p>
               <div className="flex justify-center space-x-4">
                 <Link
                   href="#all-events"
-                  className={`px-6 py-3 rounded-full font-medium shadow-md transition-all hover:scale-105 ${filter === 'all' ? 'bg-white text-indigo-800' : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                  className={`py-2 px-5 md:px-6 md:py-3 rounded-full font-medium shadow-md transition-all hover:scale-105 ${filter === 'all' ? 'bg-white text-indigo-800' : 'bg-indigo-600 hover:bg-indigo-700 text-white'
                     }`}
                   onClick={() => setFilter('all')}
                 >
@@ -145,7 +145,7 @@ function App() {
                 </Link>
                 <Link
                   href="#all-events"
-                  className={`px-6 py-3 rounded-full font-medium shadow-md transition-all hover:scale-105 ${filter === 'upcoming' ? 'bg-white text-indigo-800' : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                  className={`py-2 px-5 md:px-6 md:py-3 rounded-full font-medium shadow-md transition-all hover:scale-105 ${filter === 'upcoming' ? 'bg-white text-indigo-800' : 'bg-indigo-600 hover:bg-indigo-700 text-white'
                     }`}
                   onClick={() => setFilter('upcoming')}
                 >
@@ -153,7 +153,7 @@ function App() {
                 </Link>
                 <Link
                   href="#all-events"
-                  className={`px-6 py-3 rounded-full font-medium shadow-md transition-all hover:scale-105 ${filter === 'active' ? 'bg-white text-indigo-800' : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                  className={`py-2 px-5 md:px-6 md:py-3 rounded-full font-medium shadow-md transition-all hover:scale-105 ${filter === 'active' ? 'bg-white text-indigo-800' : 'bg-indigo-600 hover:bg-indigo-700 text-white'
                     }`}
                   onClick={() => setFilter('active')}
                 >
