@@ -126,12 +126,12 @@ function App() {
       <SideBarComp />
       <div className="min-h-screen bg-gray-50 overflow-y-scroll">
         {/* Header */}
-        <header className="bg-gradient-to-r from-indigo-900 via-blue-700 to-blue-400 text-white bg-opacity-90 backdrop-blur-lg shadow-lg">
+        <header className="bg-gradient-to-r from-[#1A237E] via-[#1565C0] to-[#42A5F5] text-white bg-opacity-90 backdrop-blur-lg shadow-lg">
           <div className="container mx-auto px-4 py-16 md:py-24">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">Kudos</h1>
               <p className="text-xl md:text-2xl mb-8 opacity-90">
-                Discover and participate in the most exciting events happening around you
+                  Don't just scroll—show up!
               </p>
               <div className="flex justify-center space-x-4">
                 <button

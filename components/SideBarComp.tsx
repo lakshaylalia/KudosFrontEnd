@@ -33,6 +33,9 @@ function SideBarComp() {
                         />
                     </div>
                     <SidebarLink
+                        link={{ label: "About", href: "/about", icon: <IconSettings /> }}
+                    />
+                    <SidebarLink
                         link={{ label: "Settings", href: "/settings", icon: <IconSettings /> }}
                     />
                 </SidebarBody>
