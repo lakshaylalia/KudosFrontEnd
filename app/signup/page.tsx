@@ -1,159 +1,108 @@
 "use client";
-import React, { useContext, useState } from "react";
-import { useRouter } from "next/navigation";
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebook } from "react-icons/fa";
+import { useForm } from "react-hook-form";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
+import React, { useContext } from "react";
+import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
 
-const Signup: React.FC = () => {
-  const auth = useContext(AuthContext)
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+interface SignUpFormInputs {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  gender: string;
+}
+
+const SignUpForm = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUpFormInputs>();
   const router = useRouter();
+  const auth = useContext(AuthContext);
 
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
-  
-    if (!auth) {
-      setError("Authentication service is unavailable.");
-      setIsLoading(false);
-      return;
-    }
-  
-    if (!email || !password) {
-      setError("Email and password are required.");
-      setIsLoading(false);
-      return;
-    }
-  
+  if (!auth) {
+    return <p>Loading...</p>;
+  }
+
+  const onSubmit = async (data: SignUpFormInputs) => {
     try {
-      await auth.signup(email, password);
-      router.push("/login");
-    } catch (error: any) {
-      setError(error.message || "Signup failed");
-      console.log("Error :",error);
-    } finally {
-      setIsLoading(false);
+      await auth.signup(data);
+      router.push("/");
+    } catch (error) {
+      console.error("Signup failed", error);
     }
-  };
-  
-
-  const handleSocialSignup = (provider: string) => {
-    alert(`Signing up with ${provider} (Not Implemented)`);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-6 bg-white p-8 rounded-lg shadow-sm">
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold text-gray-900">Create an account</h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Already have an account?{" "}
-            <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
-              Sign in
-            </Link>
-          </p>
-        </div>
-
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-md p-3">
-            <p className="text-sm text-red-600">{error}</p>
-          </div>
-        )}
-
-        {/* Social Signup Buttons */}
-        <div className="flex flex-col space-y-3">
-          <button
-            onClick={() => handleSocialSignup("Google")}
-            className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            <FcGoogle className="h-5 w-5 mr-2" />
-            Continue with Google
-          </button>
-
-          <button
-            onClick={() => handleSocialSignup("Facebook")}
-            className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            <FaFacebook className="h-5 w-5 mr-2" />
-            Continue with Facebook
-          </button>
-        </div>
-
-        {/* Divider */}
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">Or</span>
-          </div>
-        </div>
-
-        {/* Signup Form */}
-        <form className="space-y-4" onSubmit={handleSignup}>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 p-6">
+      <div className="w-full max-w-md p-8 bg-white dark:bg-neutral-800 rounded-2xl shadow-lg">
+        <h2 className="text-2xl font-bold text-center text-indigo-900 dark:text-white">Sign Up</h2>
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-              Full name
-            </label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-white">First Name</label>
             <input
-              id="name"
-              name="name"
+              {...register("firstName", { required: "First Name is required" })}
               type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
+            {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName.message}</p>}
           </div>
-
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-white">Last Name</label>
             <input
-              id="email"
-              name="email"
+              {...register("lastName", { required: "Last Name is required" })}
+              type="text"
+              className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName.message}</p>}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-white">Email</label>
+            <input
+              {...register("email", { required: "Email is required" })}
               type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
+            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
           </div>
-
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-white">Password</label>
             <input
-              id="password"
-              name="password"
+              {...register("password", { required: "Password is required" })}
               type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
+            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
           </div>
-
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-white">Gender</label>
+            <select
+              {...register("gender", { required: "Gender is required" })}
+              className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+            {errors.gender && <p className="text-red-500 text-xs mt-1">{errors.gender.message}</p>}
+          </div>
           <button
             type="submit"
-            disabled={isLoading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            className="w-full p-3 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md transition"
           >
-            {isLoading ? "Creating account..." : "Create account"}
+            Sign Up
           </button>
         </form>
+        <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-300">
+          Already have an account? <Link href="/signin" className="text-indigo-600 hover:underline">Sign In</Link>
+        </p>
       </div>
     </div>
   );
 };
 
-export default Signup;
+export default SignUpForm;

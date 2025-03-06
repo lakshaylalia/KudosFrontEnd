@@ -7,12 +7,12 @@ import { IoLogoApple } from "react-icons/io5";
 import { AuthContext } from "@/context/AuthContext";
 
 const Login: React.FC = () => {
-  const auth = useContext(AuthContext)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
+  const auth = useContext(AuthContext)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!auth) {

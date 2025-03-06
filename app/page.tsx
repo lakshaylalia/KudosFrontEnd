@@ -30,76 +30,77 @@ function App() {
       setLoading(true);
       // In a real application, this would be an API call
       setTimeout(() => {
-        setEvents([
-          {
-            id: 1,
-            title: "Annual Tech Conference",
-            date: "2025-03-15",
-            time: "09:00 AM - 05:00 PM",
-            location: "Convention Center, Downtown",
-            image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-            category: "Technology",
-            attendees: 1200,
-            status: "upcoming",
-            featured: true
-          },
-          {
-            id: 2,
-            title: "Music Festival",
-            date: "2025-02-20",
-            time: "04:00 PM - 11:00 PM",
-            location: "City Park",
-            image: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-            category: "Entertainment",
-            attendees: 5000,
-            status: "upcoming"
-          },
-          {
-            id: 3,
-            title: "Charity Run",
-            date: "2025-01-30",
-            time: "07:00 AM - 11:00 AM",
-            location: "Riverside Park",
-            image: "https://images.unsplash.com/photo-1533560904424-a0c61dc306fc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-            category: "Sports",
-            attendees: 800,
-            status: "active",
-            featured: true
-          },
-          {
-            id: 4,
-            title: "Art Exhibition",
-            date: "2025-02-05",
-            time: "10:00 AM - 06:00 PM",
-            location: "Modern Art Gallery",
-            image: "https://images.unsplash.com/photo-1531058020387-3be344556be6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-            category: "Arts & Culture",
-            attendees: 350,
-            status: "active"
-          },
-          {
-            id: 5,
-            title: "Business Networking",
-            date: "2025-03-10",
-            time: "06:00 PM - 09:00 PM",
-            location: "Grand Hotel",
-            image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-            category: "Business",
-            attendees: 200,
-            status: "upcoming"
-          },
-          {
-            id: 6,
-            title: "Food & Wine Festival",
-            date: "2025-02-15",
-            time: "12:00 PM - 08:00 PM",
-            location: "Central Plaza",
-            image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-            category: "Food & Drink",
-            attendees: 1500,
-            status: "active"
-          }
-        ]);
+        setEvents(
+          [
+            {
+              id: 1,
+              title: "Annual Tech Conference",
+              date: "2025-03-15",
+              time: "09:00 AM - 05:00 PM",
+              location: "Convention Center, Downtown",
+              image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+              category: "Technology",
+              attendees: 1200,
+              status: "upcoming",
+              featured: true
+            },
+            {
+              id: 2,
+              title: "Music Festival",
+              date: "2025-02-20",
+              time: "04:00 PM - 11:00 PM",
+              location: "City Park",
+              image: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+              category: "Entertainment",
+              attendees: 5000,
+              status: "upcoming"
+            },
+            {
+              id: 3,
+              title: "Charity Run",
+              date: "2025-01-30",
+              time: "07:00 AM - 11:00 AM",
+              location: "Riverside Park",
+              image: "https://images.unsplash.com/photo-1533560904424-a0c61dc306fc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+              category: "Sports",
+              attendees: 800,
+              status: "active",
+              featured: true
+            },
+            {
+              id: 4,
+              title: "Art Exhibition",
+              date: "2025-02-05",
+              time: "10:00 AM - 06:00 PM",
+              location: "Modern Art Gallery",
+              image: "https://images.unsplash.com/photo-1531058020387-3be344556be6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+              category: "Arts & Culture",
+              attendees: 350,
+              status: "active"
+            },
+            {
+              id: 5,
+              title: "Business Networking",
+              date: "2025-03-10",
+              time: "06:00 PM - 09:00 PM",
+              location: "Grand Hotel",
+              image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+              category: "Business",
+              attendees: 200,
+              status: "upcoming"
+            },
+            {
+              id: 6,
+              title: "Food & Wine Festival",
+              date: "2025-02-15",
+              time: "12:00 PM - 08:00 PM",
+              location: "Central Plaza",
+              image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+              category: "Food & Drink",
+              attendees: 1500,
+              status: "active"
+            }
+          ]);
         setLoading(false);
       }, 1000);
     };
@@ -134,27 +135,30 @@ function App() {
                   Don't just scroll—show up!
               </p>
               <div className="flex justify-center space-x-4">
-                <button
+                <Link
+                  href="#all-events"
                   className={`px-6 py-3 rounded-full font-medium shadow-md transition-all hover:scale-105 ${filter === 'all' ? 'bg-white text-indigo-800' : 'bg-indigo-600 hover:bg-indigo-700 text-white'
                     }`}
                   onClick={() => setFilter('all')}
                 >
                   All Events
-                </button>
-                <button
+                </Link>
+                <Link
+                  href="#all-events"
                   className={`px-6 py-3 rounded-full font-medium shadow-md transition-all hover:scale-105 ${filter === 'upcoming' ? 'bg-white text-indigo-800' : 'bg-indigo-600 hover:bg-indigo-700 text-white'
                     }`}
                   onClick={() => setFilter('upcoming')}
                 >
                   Upcoming
-                </button>
-                <button
+                </Link>
+                <Link
+                  href="#all-events"
                   className={`px-6 py-3 rounded-full font-medium shadow-md transition-all hover:scale-105 ${filter === 'active' ? 'bg-white text-indigo-800' : 'bg-indigo-600 hover:bg-indigo-700 text-white'
                     }`}
                   onClick={() => setFilter('active')}
                 >
                   Active
-                </button>
+                </Link>
               </div>
             </div>
           </div>
