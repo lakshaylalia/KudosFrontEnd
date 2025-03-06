@@ -4,7 +4,7 @@ import { Calendar, Clock, MapPin, Users, Star, Award, ChevronRight } from 'lucid
 import Footer from '@/components/Footer';
 import SideBarComp from '@/components/SideBarComp';
 import Link from 'next/link';
-
+import Image from 'next/image';
 // Types
 interface Event {
   id: number;
@@ -179,10 +179,11 @@ function App() {
                 {featuredEvents.map(event => (
                   <div key={event.id} className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
                     <div className="md:w-2/5 h-64 md:h-auto">
-                      <img
+                      <Image
                         src={event.image}
                         alt={event.title}
-                        className="w-full h-full object-cover"
+                        layout="fill"
+                        objectFit="cover"
                       />
                     </div>
                     <div className="md:w-3/5 p-6 flex flex-col justify-between">
@@ -250,10 +251,11 @@ function App() {
                 {filteredEvents.map(event => (
                   <div key={event.id} className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col h-full hover:shadow-lg transition-shadow">
                     <div className="h-48 relative">
-                      <img
+                      <Image
                         src={event.image}
                         alt={event.title}
-                        className="w-full h-full object-cover"
+                        layout="fill"
+                        objectFit="cover"
                       />
                       <div className="absolute top-4 right-4 flex space-x-2">
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${event.status === 'upcoming' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
