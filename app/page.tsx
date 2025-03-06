@@ -129,7 +129,7 @@ function App() {
         <header className="bg-gradient-to-r from-indigo-900 via-blue-700 to-blue-400 text-white bg-opacity-90 backdrop-blur-lg shadow-lg">
           <div className="container mx-auto px-4 py-16 md:py-24">
             <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">Kudos Events</h1>
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">Kudos</h1>
               <p className="text-xl md:text-2xl mb-8 opacity-90">
                 Discover and participate in the most exciting events happening around you
               </p>
@@ -281,7 +281,7 @@ function App() {
                     </div>
                     <div className="px-6 pb-6">
                       <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                        View Details
+                        {event.status === "active" ? "Register Now" : "View Details"}
                       </button>
                     </div>
                   </div>
@@ -329,7 +329,7 @@ function App() {
         </section>
 
         {/* Newsletter Section */}
-        <section className="py-12 md:py-20 bg-gradient-to-r from-indigo-900 via-blue-700 to-blue-500 text-white bg-opacity-95 backdrop-blur-lg shadow-lg">
+        {/* <section className="py-12 md:py-20 bg-gradient-to-r from-indigo-900 via-blue-700 to-blue-500 text-white bg-opacity-95 backdrop-blur-lg shadow-lg">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <h2 className="text-3xl font-bold mb-6 drop-shadow-lg">Stay Updated</h2>
@@ -351,7 +351,7 @@ function App() {
               </form>
             </div>
           </div>
-        </section>
+        </section> */}
 
         <Footer />
       </div>

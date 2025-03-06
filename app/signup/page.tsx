@@ -1,12 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import Link from "next/link";
-import axios from "axios";
+import { AuthContext } from "@/context/AuthContext";
 
 const Signup: React.FC = () => {
+  const auth = useContext(AuthContext)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -18,16 +19,30 @@ const Signup: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
-
+  
+    if (!auth) {
+      setError("Authentication service is unavailable.");
+      setIsLoading(false);
+      return;
+    }
+  
+    if (!email || !password) {
+      setError("Email and password are required.");
+      setIsLoading(false);
+      return;
+    }
+  
     try {
-      await axios.post("signupAPI", { name, email, password });
+      await auth.signup(email, password);
       router.push("/login");
-    } catch {
-      setError("Signup failed");
+    } catch (error: any) {
+      setError(error.message || "Signup failed");
+      console.log("Error :",error);
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   const handleSocialSignup = (provider: string) => {
     alert(`Signing up with ${provider} (Not Implemented)`);

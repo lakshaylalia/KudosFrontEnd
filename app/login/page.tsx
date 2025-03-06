@@ -1,11 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { IoLogoApple } from "react-icons/io5";
+import { AuthContext } from "@/context/AuthContext";
 
 const Login: React.FC = () => {
+  const auth = useContext(AuthContext)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -13,30 +15,18 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormError(null);
+    if (!auth) {
+      setFormError("Authentication context not found.");
+      return;
+    }
     setIsLoading(true);
-
+    setFormError(null);
     try {
-      const response = await fetch("api", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Invalid credentials");
-      }
-
-      const data = await response.json();
-      localStorage.setItem("token", data.token); // Store JWT token
-      alert("Logged in successfully!");
-      window.location.href = "/dashboard"; // Redirect to dashboard
+      console.log("Waiting for response from backend");
+      await auth.login(email, password);
     } catch (error) {
-      if (error instanceof Error) {
-        setFormError(error.message);
-      } else {
-        setFormError("An unknown error occurred");
-      }
+      setFormError("Invalid email or password. Please try again.");
+      console.log("Error:", error)
     } finally {
       setIsLoading(false);
     }
