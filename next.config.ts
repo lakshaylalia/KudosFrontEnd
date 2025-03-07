@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
+  reactStrictMode: false, // Disable React Strict Mode
+
   images: {
     remotePatterns: [
       {
@@ -11,4 +13,3 @@ module.exports = {
     ],
   },
 };
-
