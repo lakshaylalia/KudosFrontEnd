@@ -1,7 +1,10 @@
 "use client";
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
-interface KudosContextType {kudos: number | null;}
+export interface KudosContextType {
+  kudos: number;
+  setKudos: (kudos: number) => void;
+}
 
 {/* Kudos context which intially contains null value */}
 const KudosContext = createContext<KudosContextType | null>(null);
@@ -13,9 +16,10 @@ export const KudosProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const getKudos = async () => {
       try {
-        const res = await fetch("kudos api");
-        const data = await res.json();
-        setKudos(data.kudos);
+        // const res = await fetch("/kudos");
+        // const data = await res.json();
+        // setKudos(data.kudos);
+        setKudos(100);
       } catch (error) {
         console.error("Failed to fetch kudos:", error);
       }
@@ -24,7 +28,7 @@ export const KudosProvider = ({ children }: { children: ReactNode }) => {
     getKudos();
   }, []);
 
-  return <KudosContext.Provider value={{ kudos }}>{children}</KudosContext.Provider>;
+  return <KudosContext.Provider value={{ kudos, setKudos }}>{children}</KudosContext.Provider>;
 };
 
 

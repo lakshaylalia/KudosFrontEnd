@@ -34,7 +34,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (email: string, password: string) => {
     try {
-      const res = await axios.post("/api/auth", { email, password });
+      const res = await axios.post("https://bcef-2409-40d7-e2-5a06-b1d1-e695-5425-a00d.ngrok-free.app/login", { email, password });
       setUser(res.data.user);
       localStorage.setItem("token", res.data.token);
       router.push("/");
@@ -45,12 +45,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const signup = async (data: SignUpFormInputs) => {
     try {
-      const res = await axios.post("/api/auth", {
+      const res = await axios.post("https://bcef-2409-40d7-e2-5a06-b1d1-e695-5425-a00d.ngrok-free.app/register", {
         email: data.email,
         password: data.password,
         firstName: data.firstName,
         lastName: data.lastName,
         gender: data.gender,
+        username: data.email,
         signup: true,
       });
 

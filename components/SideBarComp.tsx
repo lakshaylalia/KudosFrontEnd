@@ -1,6 +1,6 @@
 "use client";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/Sidebar";
-import { IconHome, IconBuildingStore, IconTicket, IconDeviceDesktopAnalytics,IconSettings } from "@tabler/icons-react";
+import { IconHome, IconBuildingStore, IconTicket, IconDeviceDesktopAnalytics, IconSettings } from "@tabler/icons-react";
 import { CiBoxList } from "react-icons/ci";
 // import { useState } from 'react'
 // import { MdOutlineLogin } from "react-icons/md";
@@ -25,7 +25,8 @@ function SideBarComp() {
                     />
                     <SidebarLink
                         link={{
-                            label: "Dashboard", href: "/dashboard", icon: <IconDeviceDesktopAnalytics />}}
+                            label: "Dashboard", href: "/dashboard", icon: <IconDeviceDesktopAnalytics />
+                        }}
                     />
                     <SidebarLink
                         link={{ label: "About", href: "/about", icon: <CiBoxList className='text-3xl' /> }}

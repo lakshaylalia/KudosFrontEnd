@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useContext } from "react";
-import SideBarDash from "@/components/SideBarDash";
 import { Calendar, Users, Activity, DollarSign, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
 import { useKudosContext } from "@/context/KudosContext";
 import KudosDonutChart from "@/components/ui/DonutChart";
+import SideBarComp from "@/components/SideBarComp";
 
 interface Event {
   id: number;
@@ -51,7 +51,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      <SideBarDash />
+      <SideBarComp />
       <div className="flex-1 px-6 py-6">
         <div className="flex-1 px-6 py-6">
           <div className="flex justify-between items-center bg-white shadow-sm p-6 rounded-lg">
