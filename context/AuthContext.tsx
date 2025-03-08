@@ -26,34 +26,76 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setUser({ email: "dummy@example.com" });
-    }
-  }, []);
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token || user) return;
+
+      try {
+        console.log("Fetching user...");
+        const res = await axios.get("https://your-java-backend.com/user", {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        });
+
+        console.log("User fetched:", res.data);
+        setUser(res.data.user);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      }
+    };
+
+    fetchUser();
+  }, [user]);
+
+
 
   const login = async (email: string, password: string) => {
+    if (user) return;
+
     try {
-      const res = await axios.post("https://bcef-2409-40d7-e2-5a06-b1d1-e695-5425-a00d.ngrok-free.app/login", { email, password });
-      setUser(res.data.user);
+      console.log("Attempting to login...");
+
+      const res = await axios.post(
+        "https://9f27-2409-40d7-e2-5a06-81ba-b18c-dab7-e5e7.ngrok-free.app/login",
+        { email, password },
+        { withCredentials: true }
+      );
+
+      console.log("Login successful:", res.data);
+
       localStorage.setItem("token", res.data.token);
-      router.push("/");
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      setUser(res.data.user);
+
+      setTimeout(() => {
+        router.push("/");
+      }, 100);
     } catch (error) {
       console.error("Login failed", error);
     }
   };
 
+
+
+
   const signup = async (data: SignUpFormInputs) => {
     try {
-      const res = await axios.post("https://bcef-2409-40d7-e2-5a06-b1d1-e695-5425-a00d.ngrok-free.app/register", {
-        email: data.email,
-        password: data.password,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        gender: data.gender,
-        username: data.email,
-        signup: true,
-      });
+      const res = await axios.post("https://9f27-2409-40d7-e2-5a06-81ba-b18c-dab7-e5e7.ngrok-free.app/register",
+        {
+          email: data.email,
+          password: data.password,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          gender: data.gender,
+          username: data.email,
+          signup: true,
+        },
+        { withCredentials: true }
+      );
 
       setUser(res.data.user);
       localStorage.setItem("token", res.data.token);

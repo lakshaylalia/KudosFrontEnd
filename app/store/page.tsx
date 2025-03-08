@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useKudosContext } from '@/context/KudosContext';
 
 export default function Page() {
-
   const { kudos, setKudos } = useKudosContext();
 
   interface Product {
@@ -46,7 +45,7 @@ export default function Page() {
       {/* Main Content */}
       <div className="flex flex-col flex-1">
         {/* Top Bar */}
-        <div className="fixed top-0 w-full flex sm:flex-row  items-center bg-white shadow-sm p-4 gap-4 sm:gap-20 z-10">
+        <div className="fixed top-0 w-full flex sm:flex-row items-center bg-white shadow-sm p-4 gap-4 sm:gap-20 z-10">
           <p className="text-xl font-semibold text-blue-800 bg-blue-100 px-4 py-2 rounded-lg shadow-md">
             Kudos: {kudos}
           </p>
@@ -63,13 +62,22 @@ export default function Page() {
         <div className="flex-1 overflow-y-auto px-6 py-20">
           <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {loading ? (
-              <div className="flex flex-col items-center justify-center h-64">
-                <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                <p className="mt-4 text-xl font-semibold text-gray-700 animate-pulse">
-                  Fetching awesome products for you...
-                </p>
-              </div>
-
+              <>
+                {/* Skeleton Loader */}
+                {[...Array(6)].map((_, index) => (
+                  <div
+                    key={index}
+                    className="bg-gray-100 p-6 rounded-2xl shadow-lg border border-gray-300 animate-pulse flex flex-col justify-between"
+                  >
+                    <div className="w-full h-40 bg-gray-300 rounded-lg mb-4"></div>
+                    <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+                    <div className="h-3 bg-gray-300 rounded w-5/6 mb-2"></div>
+                    <div className="h-3 bg-gray-300 rounded w-1/2 mb-4"></div>
+                    <div className="h-6 bg-gray-300 rounded w-1/4 mb-4"></div>
+                    <div className="h-10 bg-gray-300 rounded w-full"></div>
+                  </div>
+                ))}
+              </>
             ) : filteredData.length > 0 ? (
               filteredData.map((item) => (
                 <div

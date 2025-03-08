@@ -15,22 +15,32 @@ const Login: React.FC = () => {
   const auth = useContext(AuthContext)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!auth) {
       setFormError("Authentication context not found.");
       return;
     }
+
+    if (!email || !password) {
+      setFormError("Please enter both email and password.");
+      return;
+    }
+
     setIsLoading(true);
     setFormError(null);
+
     try {
-      console.log("Waiting for response from backend");
+      console.log("Submitting login request...");
       await auth.login(email, password);
     } catch (error) {
       setFormError("Invalid email or password. Please try again.");
-      console.log("Error:", error)
+      console.error("Error:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
+
 
 
   const handleSocialLogin = (provider: string) => {

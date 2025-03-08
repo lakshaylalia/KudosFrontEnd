@@ -9,7 +9,7 @@ interface KudosDonutChartProps {
 
 const KudosDonutChart = ({ kudosData }: KudosDonutChartProps) => {
   const data = {
-    labels: ["Total Events", "Completed Events", "Kudos Earned"],
+    labels: ["Participated Events", "Completed Events", "Kudos Earned"],
     datasets: [
       {
         data: kudosData,

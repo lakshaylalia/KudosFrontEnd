@@ -4,6 +4,9 @@ import { Calendar, Clock, MapPin, Users, Star, Award, ChevronRight } from 'lucid
 import Footer from '@/components/Footer';
 import SideBarComp from '@/components/SideBarComp';
 import Link from 'next/link';
+import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/navigation";
+
 
 interface Event {
   id: number;
@@ -24,10 +27,21 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate fetching data from an API
+
     const fetchEvents = async () => {
       setLoading(true);
-      // In a real application, this would be an API call
+
+      {/*Actual api call*/ }
+      // try{
+      //   const res = await fetch("/api");
+      //   const data = await res.json();
+      //   setEvents(data);
+      // } catch{
+      //   console.log("Error in fetching");
+      // }  finally{
+      //   setLoading(false);
+      // }
+
       setTimeout(() => {
         setEvents(
           [
@@ -53,7 +67,7 @@ function App() {
               category: "Entertainment",
               attendees: 5000,
               status: "upcoming",
-              featured : false
+              featured: false
             },
             {
               id: 3,
@@ -77,7 +91,7 @@ function App() {
               category: "Arts & Culture",
               attendees: 350,
               status: "active",
-              featured : false
+              featured: false
             },
             {
               id: 5,
@@ -89,7 +103,7 @@ function App() {
               category: "Business",
               attendees: 200,
               status: "upcoming",
-              featured : false
+              featured: false
             },
             {
               id: 6,
@@ -101,7 +115,7 @@ function App() {
               category: "Food & Drink",
               attendees: 1500,
               status: "active",
-              featured : false
+              featured: false
             }
           ]);
         setLoading(false);
@@ -122,9 +136,41 @@ function App() {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
+  const router = useRouter();
 
+  const addEvent = async (eventId: number) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login to register for events!");
+      router.push("/login");
+      return;
+    }
 
+    {/* Decode JWT Token and extract email from it*/ }
+    const decoded = jwtDecode(token);
+    const userEmail = (decoded as { email: string }).email;
 
+    try {
+      const response = await fetch("https://your-backend-url/api/events/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ email: userEmail, eventId }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert("Registered successfully!");
+      } else {
+        alert("Registration failed: " + data.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred.");
+    }
+  };
   return (
     <div className='w-full h-screen flex'>
       <SideBarComp />
@@ -135,7 +181,7 @@ function App() {
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">Kudos</h1>
               <p className="text-xl md:text-2xl mb-8 opacity-90">
-                  Don&apos;t just scroll—show up!
+                Don&apos;t just scroll—show up!
               </p>
               <div className="flex justify-center space-x-4">
                 <Link
@@ -182,7 +228,7 @@ function App() {
                 {featuredEvents.map(event => (
                   <div key={event.id} className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
                     <div className="md:w-2/5 h-64 md:h-auto">
-                    <img
+                      <img
                         src={event.image}
                         alt={event.title}
                         className="w-full h-full object-cover"
@@ -216,7 +262,7 @@ function App() {
                           <span>{event.attendees} attendees</span>
                         </div>
                       </div>
-                      <button className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                      <button className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors" onClick={() => addEvent(event.id)}>
                         Register Now
                       </button>
                     </div>
@@ -234,67 +280,82 @@ function App() {
               {filter === 'all' ? 'All Events' : filter === 'upcoming' ? 'Upcoming Events' : 'Active Events'}
             </h2>
 
-            {loading ? (
-              <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
-              </div>
-            ) : filteredEvents.length === 0 ? (
-              <div className="text-center py-16">
-                <h3 className="text-xl text-gray-600">No events found</h3>
-                <button
-                  onClick={() => setFilter('all')}
-                  className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
-                >
-                  View All Events
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {filteredEvents.map(event => (
-                  <div key={event.id} className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col h-full hover:shadow-lg transition-shadow">
-                    <div className="h-48 relative">
-                    <img
-                        src={event.image}
-                        alt={event.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute top-4 right-4 flex space-x-2">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${event.status === 'upcoming' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
-                          {event.status === 'upcoming' ? 'Upcoming' : 'Active'}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="p-6 flex-grow">
-                      <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 mb-3 inline-block">
-                        {event.category}
-                      </span>
-                      <h3 className="text-xl font-bold text-gray-900 mb-3">{event.title}</h3>
-                      <div className="flex items-center text-gray-600 mb-2">
-                        <Calendar size={16} className="mr-2" />
-                        <span>{formatDate(event.date)}</span>
-                      </div>
-                      <div className="flex items-center text-gray-600 mb-2">
-                        <Clock size={16} className="mr-2" />
-                        <span>{event.time}</span>
-                      </div>
-                      <div className="flex items-center text-gray-600 mb-2">
-                        <MapPin size={16} className="mr-2" />
-                        <span>{event.location}</span>
-                      </div>
-                      <div className="flex items-center text-gray-600">
-                        <Users size={16} className="mr-2" />
-                        <span>{event.attendees} attendees</span>
-                      </div>
-                    </div>
-                    <div className="px-6 pb-6">
-                      <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                        {event.status === "active" ? "Register Now" : "View Details"}
-                      </button>
-                    </div>
+            {loading ?
+              <section className="py-12 md:py-20 bg-white">
+                <div className="container mx-auto px-4">
+                  <div className="flex items-center justify-between mb-10">
+                    <h2 className="text-3xl font-bold text-gray-900">Featured Events</h2>
+                    <div className="w-32 h-6 bg-gray-300 animate-pulse rounded"></div>
                   </div>
-                ))}
-              </div>
-            )}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {[...Array(2)].map((_, index) => (
+                      <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row">
+                        <div className="md:w-2/5 h-64 md:h-auto bg-gray-300 animate-pulse"></div>
+                        <div className="md:w-3/5 p-6 flex flex-col justify-between">
+                          <div>
+                            <div className="flex items-center mb-2">
+                              <div className="w-16 h-5 bg-gray-300 animate-pulse rounded"></div>
+                              <div className="w-16 h-5 bg-gray-300 animate-pulse rounded ml-2"></div>
+                            </div>
+                            <div className="w-48 h-6 bg-gray-300 animate-pulse rounded mb-2"></div>
+                            <div className="w-32 h-4 bg-gray-300 animate-pulse rounded mb-1"></div>
+                            <div className="w-24 h-4 bg-gray-300 animate-pulse rounded mb-1"></div>
+                            <div className="w-40 h-4 bg-gray-300 animate-pulse rounded mb-1"></div>
+                            <div className="w-28 h-4 bg-gray-300 animate-pulse rounded"></div>
+                          </div>
+                          <div className="mt-4 w-full h-10 bg-gray-300 animate-pulse rounded"></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section> : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {filteredEvents.map(event => (
+                    <div key={event.id} className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col h-full hover:shadow-lg transition-shadow">
+                      <div className="h-48 relative">
+                        <img
+                          src={event.image}
+                          alt={event.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute top-4 right-4 flex space-x-2">
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${event.status === 'upcoming' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
+                            {event.status === 'upcoming' ? 'Upcoming' : 'Active'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="p-6 flex-grow">
+                        <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 mb-3 inline-block">
+                          {event.category}
+                        </span>
+                        <h3 className="text-xl font-bold text-gray-900 mb-3">{event.title}</h3>
+                        <div className="flex items-center text-gray-600 mb-2">
+                          <Calendar size={16} className="mr-2" />
+                          <span>{formatDate(event.date)}</span>
+                        </div>
+                        <div className="flex items-center text-gray-600 mb-2">
+                          <Clock size={16} className="mr-2" />
+                          <span>{event.time}</span>
+                        </div>
+                        <div className="flex items-center text-gray-600 mb-2">
+                          <MapPin size={16} className="mr-2" />
+                          <span>{event.location}</span>
+                        </div>
+                        <div className="flex items-center text-gray-600">
+                          <Users size={16} className="mr-2" />
+                          <span>{event.attendees} attendees</span>
+                        </div>
+                      </div>
+                      <div className="px-6 pb-6">
+                        <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors" onClick={() => addEvent(event.id)}>
+                          {event.status === "active" ? "Register Now" : "View Details"}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
           </div>
         </section>
 

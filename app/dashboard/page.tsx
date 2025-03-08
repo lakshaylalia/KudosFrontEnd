@@ -105,7 +105,7 @@ const Dashboard: React.FC = () => {
             <div className="bg-white rounded-xl shadow-md p-6">
               <h2 className="text-lg font-bold text-gray-900 mb-4">Performance Overview</h2>
               <div style={{ width: '100%', height: '400px' }}> {/* Set the width and height */}
-                <KudosDonutChart kudosData={[stats.totalEvents, stats.completedEvents, stats.Kudos ?? 0]} />
+                <KudosDonutChart kudosData={[50, stats.completedEvents, stats.Kudos ?? 0]} />
               </div>
             </div>
           </div>
