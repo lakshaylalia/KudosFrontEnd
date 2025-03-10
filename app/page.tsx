@@ -24,7 +24,6 @@ function App() {
   const [events, setEvents] = useState<Event[]>([]);
   const [filter, setFilter] = useState<'all' | 'upcoming' | 'active'>('all');
   const [loading, setLoading] = useState(true);
-  const [registered, setRegistered] = useState(false);
 
   useEffect(() => {
 
@@ -40,7 +39,11 @@ function App() {
         setEvents(res2.data);
       } catch (error) {
         console.error("Error fetching events:", error);
-        alert(`Failed to fetch events: ${error.message}`);
+        if (error instanceof Error) {
+          alert(`Failed to fetch events: ${error.message}`);
+        } else {
+          alert('Failed to fetch events: Unknown error');
+        }
       } finally {
         setLoading(false);
       }
@@ -82,7 +85,7 @@ function App() {
     }
 
     try {
-      setRegistered(true);
+    
 
       const requestBody = JSON.stringify({
         email: userEmail,
@@ -117,7 +120,7 @@ function App() {
       console.error("Error:", error);
       alert("An error occurred while registering.");
     } finally {
-      setRegistered(false);
+      
     }
   };
 
