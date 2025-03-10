@@ -4,6 +4,9 @@ import {
   Clock,
   Users,
   Award,
+  BugIcon,
+  Sparkles,
+  WrenchIcon ,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import SideBarComp from "@/components/SideBarComp";
@@ -26,6 +29,50 @@ interface Ticket {
   assignee?: TeamMember;
   priority: "low" | "medium" | "high";
 }
+
+const getPriorityColor = (priority: "low" | "medium" | "high") => {
+  switch (priority) {
+    case "low":
+      return "bg-green-200 text-green-800";
+    case "medium":
+      return "bg-yellow-200 text-yellow-800";
+    case "high":
+      return "bg-red-200 text-red-800";
+    default:
+      return "";
+  }
+};
+
+const getStatusIcon = (status: "active" | "inactive" | "completed") => {
+  switch (status) {
+    case "active":
+      return <span className="text-green-500">●</span>;
+    case "inactive":
+      return <span className="text-gray-500">●</span>;
+    case "completed":
+      return <span className="text-blue-500">●</span>;
+    default:
+      return null;
+  }
+};
+
+const getTypeIcon = (type: "bug" | "feature" | "improvement") => {
+  switch (type) {
+    case "bug":
+      return <BugIcon className="w-4 h-4 text-red-500" />;
+    case "feature":
+      return <Sparkles className="w-4 h-4 text-green-500" />;
+    case "improvement":
+      return <WrenchIcon  className="w-4 h-4 text-blue-500" />;
+    default:
+      return null;
+  }
+};
+
+const formatDate = (dateString: string) => {
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+};
 
 const Tickets: React.FC = () => {
   const [filters, setFilters] = useState({ status: "all", type: "all" });
@@ -189,41 +236,67 @@ const Tickets: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredTickets.map((ticket) => (
-                <motion.div
-                  key={ticket.id}
-                  whileHover={{ scale: 1.03 }}
-                  transition={{ duration: 0.3 }}
-                  className="bg-white rounded-xl shadow-md p-6 border border-gray-200"
-                >
+                <div key={ticket.id} className="bg-white rounded-xl shadow-sm p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-gray-600 text-sm font-medium">{ticket.type.toUpperCase()}</span>
-                    <span className="text-sm text-gray-500">{ticket.status.toUpperCase()}</span>
+                    <div className="flex items-center space-x-2">
+                      {getTypeIcon(ticket.type)}
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(ticket.priority)}`}>
+                        {ticket.priority.charAt(0).toUpperCase() + ticket.priority.slice(1)}
+                      </span>
+                    </div>
+                    {getStatusIcon(ticket.status)}
                   </div>
 
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">{ticket.title}</h3>
                   <p className="text-gray-600 text-sm mb-4">{ticket.description}</p>
 
-                  <div className="space-y-3 text-gray-500 text-sm">
-                    <div className="flex items-center">
+                  <div className="space-y-3">
+                    <div className="flex items-center text-sm text-gray-500">
                       <Clock className="w-4 h-4 mr-2" />
-                      {new Date(ticket.createdAt).toLocaleDateString()}
+                      {formatDate(ticket.createdAt)}
                     </div>
-                    <div className="flex items-center">
+
+                    <div className="flex items-center text-sm text-gray-500">
                       <Users className="w-4 h-4 mr-2" />
-                      {ticket.team ? `${ticket.team.length} team members` : "1 assignee"}
+                      {ticket.team ? `${ticket.team.length} team members` : '1 assignee'}
                     </div>
-                    <div className="flex items-center">
+
+                    <div className="flex items-center text-sm text-gray-500">
                       <Award className="w-4 h-4 mr-2" />
                       {ticket.kudosReward} kudos reward
                     </div>
                   </div>
-                </motion.div>
+
+                  {ticket.team && (
+                    <div className="mt-4 pt-4 border-t border-gray-100">
+                      <p className="text-sm font-medium text-gray-700 mb-2">Team Members:</p>
+                      <div className="space-y-2">
+                        {ticket.team.map((member) => (
+                          <div key={member.id} className="flex items-center justify-between text-sm">
+                            <span className="text-gray-900">{member.name}</span>
+                            <span className="text-gray-500">{member.role}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {ticket.assignee && (
+                    <div className="mt-4 pt-4 border-t border-gray-100">
+                      <p className="text-sm font-medium text-gray-700 mb-2">Assignee:</p>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-900">{ticket.assignee.name}</span>
+                        <span className="text-gray-500">{ticket.assignee.role}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           )}
-        </div>
-      </motion.div>
-    </section>
+    </div>
+      </motion.div >
+    </section >
   );
 };
 

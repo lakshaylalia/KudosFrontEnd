@@ -26,20 +26,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const router = useRouter();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem("token");
-      if (!token || user) return;
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      return;
+    }
 
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const fetchUser = async () => {
       try {
         console.log("Fetching user...");
+
         const res = await axios.get("https://your-java-backend.com/user", {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
 
         console.log("User fetched:", res.data);
-        setUser(res.data.user);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
+        setUser(res.data); // Corrected to set res.data directly
+        localStorage.setItem("user", JSON.stringify(res.data)); // Store the whole data
       } catch (error) {
         console.error("Error fetching user:", error);
         localStorage.removeItem("token");
@@ -48,43 +55,37 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     fetchUser();
-  }, [user]);
-
+  }, []);
 
 
   const login = async (email: string, password: string) => {
-    if (user) return;
-
     try {
       console.log("Attempting to login...");
+      console.log(email, password);
 
       const res = await axios.post(
-        "https://9f27-2409-40d7-e2-5a06-81ba-b18c-dab7-e5e7.ngrok-free.app/login",
-        { email, password },
+        "https://kudos-backend-idtg.onrender.com/login",
+        { username: email, password: password },
         { withCredentials: true }
       );
 
       console.log("Login successful:", res.data);
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      const token = res.data.data;
 
-      setUser(res.data.user);
-
-      setTimeout(() => {
-        router.push("/");
-      }, 100);
+      localStorage.setItem("token", token);
+      setUser({ email });
+      router.push("/");
     } catch (error) {
       console.error("Login failed", error);
     }
   };
 
 
-
-
   const signup = async (data: SignUpFormInputs) => {
     try {
-      const res = await axios.post("https://9f27-2409-40d7-e2-5a06-81ba-b18c-dab7-e5e7.ngrok-free.app/register",
+      const res = await axios.post(
+        "https://kudos-backend-idtg.onrender.com/register",
         {
           email: data.email,
           password: data.password,
@@ -97,19 +98,32 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         { withCredentials: true }
       );
 
-      setUser(res.data.user);
-      localStorage.setItem("token", res.data.token);
+      setUser(res.data.data);
+      localStorage.setItem("user", JSON.stringify(res.data.data));
       router.push("/");
     } catch (error) {
       console.error("Signup failed", error);
     }
   };
 
-  const logout = () => {
+
+  const logout = async () => {
+    try {
+      await axios.post(
+        "https://kudos-backend-idtg.onrender.com/logout",
+        {},
+        { withCredentials: true }
+      );
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+
     setUser(null);
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     router.push("/login");
   };
+
 
   return (
     <AuthContext.Provider value={{ user, login, signup, logout }}>

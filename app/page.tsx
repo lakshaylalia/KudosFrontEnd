@@ -4,7 +4,6 @@ import { Calendar, Clock, MapPin, Users, Star, Award, ChevronRight } from 'lucid
 import Footer from '@/components/Footer';
 import SideBarComp from '@/components/SideBarComp';
 import Link from 'next/link';
-import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 
 
@@ -25,102 +24,29 @@ function App() {
   const [events, setEvents] = useState<Event[]>([]);
   const [filter, setFilter] = useState<'all' | 'upcoming' | 'active'>('all');
   const [loading, setLoading] = useState(true);
+  const [registered, setRegistered] = useState(false);
 
   useEffect(() => {
 
     const fetchEvents = async () => {
       setLoading(true);
-
-      {/*Actual api call*/ }
-      // try{
-      //   const res = await fetch("/api");
-      //   const data = await res.json();
-      //   setEvents(data);
-      // } catch{
-      //   console.log("Error in fetching");
-      // }  finally{
-      //   setLoading(false);
-      // }
-
-      setTimeout(() => {
-        setEvents(
-          [
-            {
-              id: 1,
-              title: "Annual Tech Conference",
-              date: "2025-03-15",
-              time: "09:00 AM - 05:00 PM",
-              location: "Convention Center, Downtown",
-              image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-              category: "Technology",
-              attendees: 1200,
-              status: "upcoming",
-              featured: true
-            },
-            {
-              id: 2,
-              title: "Music Festival",
-              date: "2025-02-20",
-              time: "04:00 PM - 11:00 PM",
-              location: "City Park",
-              image: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-              category: "Entertainment",
-              attendees: 5000,
-              status: "upcoming",
-              featured: false
-            },
-            {
-              id: 3,
-              title: "Charity Run",
-              date: "2025-01-30",
-              time: "07:00 AM - 11:00 AM",
-              location: "Riverside Park",
-              image: "https://images.unsplash.com/photo-1533560904424-a0c61dc306fc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-              category: "Sports",
-              attendees: 800,
-              status: "active",
-              featured: true
-            },
-            {
-              id: 4,
-              title: "Art Exhibition",
-              date: "2025-02-05",
-              time: "10:00 AM - 06:00 PM",
-              location: "Modern Art Gallery",
-              image: "https://images.unsplash.com/photo-1531058020387-3be344556be6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-              category: "Arts & Culture",
-              attendees: 350,
-              status: "active",
-              featured: false
-            },
-            {
-              id: 5,
-              title: "Business Networking",
-              date: "2025-03-10",
-              time: "06:00 PM - 09:00 PM",
-              location: "Grand Hotel",
-              image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-              category: "Business",
-              attendees: 200,
-              status: "upcoming",
-              featured: false
-            },
-            {
-              id: 6,
-              title: "Food & Wine Festival",
-              date: "2025-02-15",
-              time: "12:00 PM - 08:00 PM",
-              location: "Central Plaza",
-              image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-              category: "Food & Drink",
-              attendees: 1500,
-              status: "active",
-              featured: false
-            }
-          ]);
+      try {
+        const res = await fetch("https://kudos-backend-idtg.onrender.com/events/get-all-events");
+        if (!res.ok) {
+          throw new Error(`Error ${res.status}: ${res.statusText}`);
+        }
+        const res2 = await res.json();
+        console.log("Fetched data:", res2.data);  // <-- Check this output
+        setEvents(res2.data);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+        alert(`Failed to fetch events: ${error.message}`);
+      } finally {
         setLoading(false);
-      }, 1000);
+      }
     };
+
+
 
     fetchEvents();
   }, []);
@@ -140,37 +66,61 @@ function App() {
 
   const addEvent = async (eventId: number) => {
     const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user") as string)
+      : null;
+    const userEmail = userData?.email;
+
+    console.log("User Email from Local Storage:", userEmail);
+    console.log("Event ID:", eventId);
+    console.log("Token:", token);
+
     if (!token) {
       alert("Please login to register for events!");
       router.push("/login");
       return;
     }
 
-    {/* Decode JWT Token and extract email from it*/ }
-    const decoded = jwtDecode(token);
-    const userEmail = (decoded as { email: string }).email;
-
     try {
-      const response = await fetch("https://your-backend-url/api/events/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ email: userEmail, eventId }),
+      setRegistered(true);
+
+      const requestBody = JSON.stringify({
+        email: userEmail,
+        eventId: eventId
       });
 
+      console.log("Request Body:", requestBody);
+
+      const response = await fetch(
+        "https://kudos-backend-idtg.onrender.com/employee/register-event",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: requestBody,
+        }
+      );
+
       const data = await response.json();
+
+      console.log("Response Status:", response.status);
+      console.log("Response Data:", data);
+
       if (response.ok) {
         alert("Registered successfully!");
       } else {
-        alert("Registration failed: " + data.message);
+        alert("Registration failed: " + (data.message || "Unknown error"));
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occurred.");
+      alert("An error occurred while registering.");
+    } finally {
+      setRegistered(false);
     }
   };
+
   return (
     <div className='w-full h-screen flex'>
       <SideBarComp />
@@ -396,30 +346,6 @@ function App() {
           </div>
         </section>
 
-        {/* Newsletter Section */}
-        {/* <section className="py-12 md:py-20 bg-gradient-to-r from-indigo-900 via-blue-700 to-blue-500 text-white bg-opacity-95 backdrop-blur-lg shadow-lg">
-          <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl font-bold mb-6 drop-shadow-lg">Stay Updated</h2>
-              <p className="text-lg mb-8 opacity-90">
-                Subscribe to our newsletter to get the latest updates on events and exclusive offers
-              </p>
-              <form className="flex flex-col md:flex-row gap-4 justify-center">
-                <input
-                  type="email"
-                  placeholder="Your email address"
-                  className="px-5 py-3 rounded-lg text-gray-900 w-full md:w-auto md:flex-grow max-w-md focus:ring-2 focus:ring-blue-300 shadow-md"
-                />
-                <button
-                  type="submit"
-                  className="bg-white text-indigo-700 hover:bg-gray-100 font-medium px-6 py-3 rounded-lg shadow-md transition-transform hover:scale-105"
-                >
-                  Subscribe
-                </button>
-              </form>
-            </div>
-          </div>
-        </section> */}
 
         <Footer />
       </div>

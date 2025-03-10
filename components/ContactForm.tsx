@@ -1,5 +1,9 @@
+"use client";
+
 import React, { useState } from 'react';
 import { Send } from 'lucide-react';
+import emailjs from '@emailjs/browser';
+import { toast } from 'react-hot-toast';
 
 const ContactForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -9,10 +13,35 @@ const ContactForm: React.FC = () => {
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
+    setLoading(true); 
+
+    emailjs
+      .send(
+        process.env.NEXT_PUBLIC_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_TEMPLATE_ID!,
+        {
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message
+        },
+        process.env.NEXT_PUBLIC_PUBLIC_KEY!
+      )
+      .then(() => {
+        toast.success('Message sent successfully!');
+        setFormData({ name: '', email: '', subject: '', message: '' }); // Reset form
+      })
+      .catch((error) => {
+        console.error('Error sending email:', error);
+        toast.error('Failed to send message. Please try again.');
+      })
+      .finally(() => {
+        setLoading(false); 
+      });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -87,13 +116,24 @@ const ContactForm: React.FC = () => {
           required
         ></textarea>
       </div>
+
       <div className="flex justify-end">
         <button
           type="submit"
-          className="inline-flex items-center px-6 py-3 rounded-xl text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200 shadow-sm hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className={`inline-flex items-center px-6 py-3 rounded-xl text-white ${loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'} transition-colors duration-200 shadow-sm hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
+          disabled={loading}
         >
-          <Send className="w-5 h-5 mr-2" />
-          Send Message
+          {loading ? (
+            <>
+              <div className="animate-spin w-5 h-5 border-4 border-white border-t-transparent rounded-full mr-2"></div>
+              Sending...
+            </>
+          ) : (
+            <>
+              <Send className="w-5 h-5 mr-2" />
+              Send Message
+            </>
+          )}
         </button>
       </div>
     </form>

@@ -19,10 +19,10 @@ function Footer() {
           <div>
             <h4 className="text-lg font-medium mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              {["Home", "Events", "Categories", "About Us"].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="text-gray-300 hover:text-white transition-colors">
-                    {item}
+              {[{name:"Home", link :"/"}, {name:"Tickets", link:"/tickets"}, {name:"Settings", link:"/settings"}, {name:"About Us",link:"/about"}].map((item) => (
+                <li key={item.name}>
+                  <Link href={item.link} className="text-gray-300 hover:text-white transition-colors">
+                    {item.name}
                   </Link>
                 </li>
               ))}
@@ -35,7 +35,7 @@ function Footer() {
             <ul className="space-y-2">
               {["Help Center", "Contact Us", "FAQs", "Privacy Policy"].map((item) => (
                 <li key={item}>
-                  <Link href="#" className="text-gray-300 hover:text-white transition-colors">
+                  <Link href="/faq" className="text-gray-300 hover:text-white transition-colors">
                     {item}
                   </Link>
                 </li>
